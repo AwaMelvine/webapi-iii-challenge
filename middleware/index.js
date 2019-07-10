@@ -8,7 +8,7 @@ module.exports = {
     next();
   },
 
-  validateUserId(req, res, next) {
+  async validateUserId(req, res, next) {
     const id = Number.parseInt(req.params.id, 10);
     if (Number.isInteger(id)) {
       const user = await User.getById(id);
@@ -16,9 +16,10 @@ module.exports = {
         req.user = user;
         next();
       } else {
-        res.status(400).json({ message: "invalid user id" });
+        res.status(404).json({ message: "There's no user with that id" });
       }
     } else {
+      res.status(400).json({ message: "invalid user id" });
     }
   },
 
@@ -29,6 +30,7 @@ module.exports = {
     if (!req.body.name) {
       return res.status(400).json({ message: "missing required name field" });
     }
+    next();
   },
 
   async validatePostId(req, res, next) {

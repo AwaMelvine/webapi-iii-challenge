@@ -33,16 +33,7 @@ router.delete("/:id", validatePostId, async (req, res) => {
   }
 });
 
-router.post("/", validatePost, async (req, res) => {
-  try {
-    const post = await Post.insert(req.body);
-    res.status(201).json({ post });
-  } catch (error) {
-    res.status(500).json({ message: "Failed to create post" });
-  }
-});
-
-router.put("/:id", async (req, res) => {
+router.put("/:id", validatePost, async (req, res) => {
   try {
     const { id } = req.params;
     const post = await Post.update(id, req.body);
