@@ -55,5 +55,6 @@ module.exports = {
     if (!req.body.text) {
       return res.status(400).json({ message: "missing required text field" });
     }
+    next();
   }
 };

@@ -1,6 +1,6 @@
 const express = require("express");
 const Post = require("./postDb");
-const { validatePostId } = require("../middleware");
+const { validatePostId, validatePost } = require("../middleware");
 
 const router = express.Router();
 
@@ -23,16 +23,33 @@ router.get("/:id", validatePostId, async (req, res) => {
   }
 });
 
-router.delete("/:id", validatePostId, (req, res) => {
-    try {
-        const { id } = req.params;
-        const post = await Post.remove(id);
-        res.status(200).json({ post });
-    } catch (error) {
-        res.status(500).json({ message: "Failed to delete post" });
-    }
+router.delete("/:id", validatePostId, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const count = await Post.remove(id);
+    res.status(200).json({ count });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to delete post" });
+  }
 });
 
-router.put("/:id", (req, res) => {});
+router.post("/", validatePost, async (req, res) => {
+  try {
+    const post = await Post.insert(req.body);
+    res.status(201).json({ post });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to create post" });
+  }
+});
+
+router.put("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const post = await Post.update(id, req.body);
+    res.status(200).json({ post });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update post" });
+  }
+});
 
 module.exports = router;
