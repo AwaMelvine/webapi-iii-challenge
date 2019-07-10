@@ -17,12 +17,22 @@ module.exports = {
     } else {
     }
   },
+
   validateUser(req, res, next) {
     if (!req.body) {
       return res.status(400).json({ message: "missing user data" });
     }
     if (!req.body.name) {
       return res.status(400).json({ message: "missing required name field" });
+    }
+  },
+
+  validatePost(req, res, next) {
+    if (!req.body) {
+      return res.status(400).json({ message: "missing post data" });
+    }
+    if (!req.body.text) {
+      return res.status(400).json({ message: "missing required text field" });
     }
   }
 };
