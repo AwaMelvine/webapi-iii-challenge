@@ -23,7 +23,15 @@ router.get("/:id", validatePostId, async (req, res) => {
   }
 });
 
-router.delete("/:id", (req, res) => {});
+router.delete("/:id", validatePostId, (req, res) => {
+    try {
+        const { id } = req.params;
+        const post = await Post.remove(id);
+        res.status(200).json({ post });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to delete post" });
+    }
+});
 
 router.put("/:id", (req, res) => {});
 
