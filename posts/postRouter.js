@@ -1,27 +1,46 @@
-const express = 'express';
+const express = require("express");
+const Post = require("./postDb");
+const { validatePostId, validatePost } = require("../middleware");
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-
+router.get("/", async (req, res) => {
+  try {
+    const posts = await Post.get();
+    res.status(200).json({ posts });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to get posts" });
+  }
 });
 
-router.get('/:id', (req, res) => {
-
+router.get("/:id", validatePostId, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const post = await Post.getById(id);
+    res.status(200).json({ post });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to get post" });
+  }
 });
 
-router.delete('/:id', (req, res) => {
-
+router.delete("/:id", validatePostId, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const count = await Post.remove(id);
+    res.status(200).json({ count });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to delete post" });
+  }
 });
 
-router.put('/:id', (req, res) => {
-
+router.put("/:id", validatePost, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const post = await Post.update(id, req.body);
+    res.status(200).json({ post });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update post" });
+  }
 });
-
-// custom middleware
-
-function validatePostId(req, res, next) {
-
-};
 
 module.exports = router;
