@@ -40,10 +40,20 @@ router.get("/:id", validateUserId, async (req, res) => {
     const { id } = req.params;
     const user = await User.getById(id);
     res.status(200).json({ user });
-  } catch (error) {}
+  } catch (error) {
+    res.status(500).json({ message: "Could not get user" });
+  }
 });
 
-router.get("/:id/posts", (req, res) => {});
+router.get("/:id/posts", validateUserId, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const posts = await User.getUserPosts(id);
+    res.status(200).json({ posts });
+  } catch (error) {
+    res.status(500).json({ message: "Unable to get user posts" });
+  }
+});
 
 router.delete("/:id", (req, res) => {});
 
