@@ -65,6 +65,15 @@ router.delete("/:id", validateUserId, async (req, res) => {
   }
 });
 
-router.put("/:id", (req, res) => {});
+router.put("/:id", validateUserId, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { body } = req;
+    const user = await User.update(id, body);
+    res.status(201).json({ user });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to update user" });
+  }
+});
 
 module.exports = router;
