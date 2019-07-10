@@ -1,4 +1,5 @@
 const Post = require("../posts/postDb");
+const User = require("../users/userDb");
 
 module.exports = {
   logger(req, res, next) {
@@ -10,10 +11,10 @@ module.exports = {
   validateUserId(req, res, next) {
     const id = Number.parseInt(req.params.id, 10);
     if (Number.isInteger(id)) {
-      const user = {}; // find user by id from db
+      const user = await User.getById(id);
       if (user) {
-        // save user as req.user
-        // next();
+        req.user = user;
+        next();
       } else {
         res.status(400).json({ message: "invalid user id" });
       }
