@@ -2,6 +2,7 @@ module.exports = {
   logger(req, res, next) {
     req.timestamp = Date.now();
     console.log({ method: req.method, url: req.url, timestamp: req.timestamp });
+    next();
   },
 
   validateUserId(req, res, next) {
