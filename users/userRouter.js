@@ -26,9 +26,22 @@ router.post("/:id/posts", validatePost, async (req, res) => {
   }
 });
 
-router.get("/", (req, res) => {});
+router.get("/", async (req, res) => {
+  try {
+    const users = await User.get();
+    res.status(200).json({ users });
+  } catch (error) {
+    res.status(500).json({ message: "Could not get users" });
+  }
+});
 
-router.get("/:id", (req, res) => {});
+router.get("/:id", validateUserId, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await User.getById(id);
+    res.status(200).json({ user });
+  } catch (error) {}
+});
 
 router.get("/:id/posts", (req, res) => {});
 
